@@ -1,0 +1,23 @@
+[project]
+name = "prd_generator"
+version = "0.1.0"
+description = "prd-generator using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]>=0.186.1,<1.0.0"
+]
+
+[project.scripts]
+prd_generator = "prd_generator.main:run"
+run_crew = "prd_generator.main:run"
+train = "prd_generator.main:train"
+replay = "prd_generator.main:replay"
+test = "prd_generator.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

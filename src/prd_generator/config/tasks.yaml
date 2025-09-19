@@ -1,0 +1,155 @@
+# Task Definitions with Sequential Dependencies
+analyze_requirements:
+  description: |
+    Analyze the user's app/web idea: {idea_description}
+
+    Extract and document:
+    - Core business objectives and value proposition
+    - Target audience and user personas
+    - Key functional requirements and features
+    - Non-functional requirements (performance, security, scalability)
+    - Success metrics and KPIs
+    - Competitive landscape analysis
+    - Risk assessment and mitigation strategies
+
+    Provide structured output with clear categorization and prioritization.
+  agent: requirements_analyst
+  expected_output: |
+    A comprehensive requirements analysis document containing:
+    1. Executive Summary (2-3 paragraphs)
+    2. Business Objectives & Value Proposition
+    3. User Personas & Target Audience
+    4. Functional Requirements (prioritized list)
+    5. Non-Functional Requirements (detailed specifications)
+    6. Success Metrics & KPIs
+    7. Competitive Analysis
+    8. Risk Assessment Matrix
+
+generate_prd:
+  description: |
+    Using the requirements analysis, create a comprehensive Product Requirements Document (PRD).
+
+    The PRD must include:
+    - Executive Summary with project vision
+    - Detailed stakeholder analysis
+    - Complete feature specifications with user stories
+    - Technical requirements and constraints
+    - User experience and interface guidelines
+    - Success metrics and acceptance criteria
+    - Timeline and milestone definitions
+    - Resource requirements
+
+    Follow industry-standard PRD template structure and ensure enterprise-grade quality.
+  agent: prd_architect
+  expected_output: |
+    A complete PRD document (8000+ words) with:
+    1. Document Information & Version Control
+    2. Executive Summary
+    3. Product Overview & Vision
+    4. Stakeholder Analysis
+    5. Market & User Research
+    6. Feature Requirements (with user stories)
+    7. Technical Requirements
+    8. Design & UX Guidelines
+    9. Success Metrics & KPIs
+    10. Timeline & Milestones
+    11. Resource Requirements
+    12. Risk Management
+    13. Appendices
+  context:
+    - analyze_requirements
+
+recommend_tech_stack:
+  description: |
+    Based on the PRD and requirements analysis, recommend an optimal technology stack.
+
+    Provide recommendations for:
+    - Frontend technologies (web and/or mobile)
+    - Backend frameworks and languages
+    - Database solutions (relational and NoSQL options)
+    - Authentication and security tools
+    - DevOps and deployment platforms
+    - Third-party integrations and APIs
+    - Development and testing tools
+
+    Focus on open-source and free-tier solutions while ensuring scalability and maintainability.
+    Include justifications for each technology choice.
+  agent: tech_stack_advisor
+  expected_output: |
+    A detailed technology stack recommendation document with:
+    1. Architecture Overview Diagram
+    2. Frontend Technologies (with alternatives)
+    3. Backend Technologies (with alternatives)
+    4. Database Recommendations
+    5. Infrastructure & DevOps Tools
+    6. Security & Authentication Solutions
+    7. Third-party Integrations
+    8. Development & Testing Tools
+    9. Cost Analysis (open-source vs paid options)
+    10. Scalability Considerations
+    11. Technology Decision Matrix
+  context:
+    - analyze_requirements
+    - generate_prd
+
+create_development_guide:
+  description: |
+    Create a comprehensive phase-by-phase development guide using the PRD and tech stack recommendations.
+
+    The guide must include:
+    - Detailed project timeline with phases
+    - Sprint-by-sprint breakdown for each phase
+    - Specific implementation steps for each feature
+    - Testing strategies and quality assurance processes
+    - Deployment and launch procedures
+    - Post-launch maintenance guidelines
+
+    Follow agile/scrum methodologies and provide actionable steps that development teams can directly implement.
+  agent: development_planner
+  expected_output: |
+    A comprehensive development guide (10000+ words) containing:
+    1. Development Methodology Overview
+    2. Phase 1: Planning & Architecture (2-4 weeks)
+    3. Phase 2: Core Development Setup (1-2 weeks)
+    4. Phase 3: MVP Feature Development (8-12 weeks)
+    4. Phase 4: Advanced Features & Integrations (4-6 weeks)
+    5. Phase 5: Testing & Quality Assurance (2-4 weeks)
+    6. Phase 6: Deployment & Launch (1-2 weeks)
+    7. Phase 7: Post-Launch Support (ongoing)
+    8. Risk Mitigation Strategies
+    9. Resource Allocation Guidelines
+    10. Quality Gates & Review Checkpoints
+    11. Team Coordination Processes
+  context:
+    - analyze_requirements
+    - generate_prd
+    - recommend_tech_stack
+
+review_deliverables:
+  description: |
+    Conduct comprehensive quality review of all generated documents.
+
+    Review criteria:
+    - Completeness and accuracy of information
+    - Adherence to industry standards
+    - Internal consistency across documents
+    - Actionability and clarity of recommendations
+    - Technical feasibility and best practices
+
+    Provide detailed feedback and recommendations for improvements.
+  agent: quality_reviewer
+  expected_output: |
+    A quality review report containing:
+    1. Overall Assessment Summary
+    2. Document-by-Document Analysis
+    3. Consistency Check Results
+    4. Technical Accuracy Validation
+    5. Completeness Assessment
+    6. Improvement Recommendations
+    7. Final Approval Status
+    8. Next Steps & Follow-up Actions
+  context:
+    - analyze_requirements
+    - generate_prd
+    - recommend_tech_stack
+    - create_development_guide

@@ -1,0 +1,42 @@
+# Core CrewAI and dependencies
+crewai>=0.186.0
+crewai[tools]>=0.186.0
+
+# AI and Language Models
+openai>=1.60.0
+langchain>=0.3.20
+langchain-openai>=0.2.20
+
+# Vector Database (Pinecone alternative to ChromaDB)
+pinecone-client>=6.0.0
+
+# Data Processing
+pydantic>=2.10.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# File Processing and Templates
+jinja2>=3.1.0
+markdown>=3.4.0
+python-docx>=1.1.0
+
+# Web Framework for API interface
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# Development Tools (optional for production)
+pytest>=7.4.0
+black>=23.7.0
+flake8>=6.0.0
+
+# Environment and Configuration
+python-dotenv>=1.1.0
+click>=8.1.0
+rich>=14.0.0
+
+# Optional: PDF Export (for Phase 6)
+# weasyprint>=60.0
+
+# Production optimization - exclude heavy dependencies not needed immediately
+# chromadb==0.5.23  # Uncomment if C++ build tools are available
+# onnxruntime==1.22.0  # Heavy ML library for embeddings
