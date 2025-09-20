@@ -5,6 +5,14 @@ import os
 import asyncio
 from typing import Dict, Any, Optional
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("✓ Loaded .env file - OpenAI API Key:", "YES" if os.getenv("OPENAI_API_KEY") else "NO")
+except ImportError:
+    print("⚠️  python-dotenv not installed - using system environment variables")
+
 from datetime import datetime
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse

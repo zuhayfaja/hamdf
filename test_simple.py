@@ -47,10 +47,10 @@ try:
     print("\n🔍 Testing OpenRouter connection...")
     try:
         response = litellm.completion(
-            model="openai/x-ai/grok-4-fast:free",
+            model="openai/gpt-oss-120b",
             messages=[{"role": "user", "content": "Hello, test message"}],
             max_tokens=50,
-            api_base="https://openrouter.ai/api/v1"
+            api_base=os.getenv("OPENAI_BASE_URL", "https://api.cerebras.ai/v1")
         )
         print("✅ OpenRouter connection successful!")
         print("LiteLLM is properly configured for OpenRouter API.")
