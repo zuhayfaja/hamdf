@@ -72,6 +72,18 @@ async def web_interface():
             .features { margin: 40px 0; padding-left: 20px; }
             .features h3 { color: #1f2937; }
             .features ul { color: #4b5563; }
+            .files { display: none; margin-top: 40px; }
+            .files h3 { color: #1f2937; }
+            .file-list { background: #f8f9fa; border-radius: 8px; padding: 15px; }
+            .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+            .file-item:last-child { border-bottom: none; }
+            .file-name { font-weight: 500; color: #374151; }
+            .file-actions { display: flex; gap: 10px; }
+            .file-actions button { padding: 8px 16px; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; }
+            .download-btn { background: #059669; color: white; }
+            .copy-btn { background: #dc2626; color: white; }
+            .view-btn { background: #6b7280; color: white; }
+            .copy-notification { position: fixed; top: 20px; right: 20px; background: #059669; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
         </style>
     </head>
     <body>
@@ -105,6 +117,17 @@ async def web_interface():
             <div id="status" class="status">
                 <div id="statusContent"></div>
             </div>
+
+            <div id="filesSection" class="files">
+                <h3>📥 Generated Documents</h3>
+                <div id="fileList" class="file-list">
+                    <!-- Files will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="copyNotification" class="copy-notification">
+            ✅ Content copied to clipboard!
         </div>
 
         <script>
@@ -152,6 +175,9 @@ async def web_interface():
                     const result = await response.json();
                     showStatus('success', `✅ PRD Generation Complete!\\n\\n📊 Documents saved:\\n• Product Requirements Document\\n• Technology Stack Recommendations\\n• Development Guide\\n• Quality Review Report\\n\\nAll files generated successfully!`);
 
+                    // Load and display generated files
+                    await loadFiles();
+
                 } catch (error) {
                     console.error('Generation error:', error);
                     showStatus('error', `❌ Generation Failed: ${error.message}`);
@@ -177,6 +203,66 @@ async def web_interface():
                 status.style.display = 'block';
                 status.className = `status ${type}`;
                 statusContent.innerHTML = message.replace(/\\n/g, '<br>');
+            }
+
+            async function loadFiles() {
+                try {
+                    const response = await fetch('/files');
+                    const data = await response.json();
+
+                    if (data.files && data.files.length > 0) {
+                        const fileList = document.getElementById('fileList');
+                        fileList.innerHTML = '';
+
+                        data.files.forEach(file => {
+                            const fileItem = document.createElement('div');
+                            fileItem.className = 'file-item';
+
+                            fileItem.innerHTML = `
+                                <div class="file-name">${file.filename}</div>
+                                <div class="file-actions">
+                                    <button class="download-btn" onclick="downloadFile('${file.filename}')">📥 Download</button>
+                                    <button class="copy-btn" onclick="copyFile('${file.filename}')">📋 Copy</button>
+                                </div>
+                            `;
+
+                            fileList.appendChild(fileItem);
+                        });
+
+                        document.getElementById('filesSection').style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error loading files:', error);
+                }
+            }
+
+            async function downloadFile(filename) {
+                const link = document.createElement('a');
+                link.href = `/download/${filename}`;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            async function copyFile(filename) {
+                try {
+                    const response = await fetch(`/copy/${filename}`);
+                    const data = await response.json();
+
+                    await navigator.clipboard.writeText(data.content);
+
+                    // Show notification
+                    const notification = document.getElementById('copyNotification');
+                    notification.style.display = 'block';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 2000);
+
+                } catch (error) {
+                    console.error('Error copying file:', error);
+                    alert('Failed to copy file content. Please try downloading instead.');
+                }
             }
         </script>
     </body>
@@ -238,7 +324,9 @@ async def list_generated_files():
                 files.append({
                     "filename": file_path.name,
                     "size": stat.st_size,
-                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat()
+                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                    "download_url": f"/download/{file_path.name}",
+                    "copy_url": f"/copy/{file_path.name}"
                 })
 
         return {
@@ -248,6 +336,46 @@ async def list_generated_files():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to list files: {str(e)}")
+
+
+@app.get("/download/{filename}", summary="Download File")
+async def download_file(filename: str):
+    """Download a generated file."""
+    try:
+        file_path = outputs_dir / filename
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found")
+
+        from fastapi.responses import FileResponse
+        return FileResponse(
+            path=str(file_path),
+            media_type='application/octet-stream',
+            filename=filename
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to download file: {str(e)}")
+
+
+@app.get("/copy/{filename}", summary="Copy File Content")
+async def copy_file(filename: str):
+    """Return file content for copying."""
+    try:
+        file_path = outputs_dir / filename
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found")
+
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        return JSONResponse(content={
+            "filename": filename,
+            "content": content,
+            "size": len(content)
+        })
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to copy file content: {str(e)}")
 
 
 def run():
