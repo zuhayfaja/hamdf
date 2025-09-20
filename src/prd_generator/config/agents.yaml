@@ -38,6 +38,7 @@ development_planner:
   allow_delegation: false
   max_iter: 3
   memory: true
+  tools: []
 
 quality_reviewer:
   role: "Senior Quality Assurance Lead"

@@ -110,7 +110,7 @@ create_planning_setup:
     Provide specific, actionable steps for Weeks 1-2.
   agent: development_planner
   expected_output: |
-    A planning and setup guide (2500 words) containing:
+    A planning and setup guide (1500 words) containing:
     1. Development Methodology Overview
     2. Phase 1: Planning & Setup (2 weeks)
     - Sprint planning meetings
@@ -139,7 +139,7 @@ create_technical_architecture:
     Provide specific technical specifications ready for Week 2 implementation.
   agent: development_planner
   expected_output: |
-    A technical architecture guide (2500 words) containing:
+    A technical architecture guide (1200 words) containing:
     1. Week 2: Technical Architecture Design (1-2 weeks)
     - High-level architecture diagrams and system components
     - Database schema design and migration scripts creation
@@ -165,7 +165,7 @@ create_development_environment:
     Provide infrastructure and tooling specifications for Week 3.
   agent: development_planner
   expected_output: |
-    A development environment guide (2500 words) containing:
+    A development environment guide (1000 words) containing:
     1. Week 3: Development Environment Setup (1-2 weeks)
     - Local, staging, and production environment configurations
     - CI/CD pipeline definition and implementation steps
@@ -191,7 +191,7 @@ create_mvp_development:
     Provide detailed implementation plans for the main development phase.
   agent: development_planner
   expected_output: |
-    An MVP development guide (3000 words) containing:
+    An MVP development guide (1000 words) containing:
     1. Weeks 4-5: MVP Planning & Core Features (2 weeks)
     - Feature prioritization and sprint breakdown
     - Core functionality development roadmap
@@ -221,7 +221,7 @@ create_testing_quality:
     Provide complete testing methodologies and checklists.
   agent: development_planner
   expected_output: |
-    A testing and quality guide (2500 words) containing:
+    A testing and quality guide (800 words) containing:
     1. Weeks 9-10: Testing & Quality Assurance (2 weeks)
     - Comprehensive testing strategy and framework implementation
     - Unit testing, integration testing, and end-to-end testing procedures
@@ -247,7 +247,7 @@ create_deployment_launch:
     Provide production deployment and launch specifications.
   agent: development_planner
   expected_output: |
-    A deployment and launch guide (2000 words) containing:
+    A deployment and launch guide (500 words) containing:
     1. Weeks 11-12: Deployment & Launch (2 weeks)
     - Production environment final configuration and security hardening
     - Automated deployment pipelines and rollback procedures
@@ -273,7 +273,7 @@ create_post_launch_support:
     Provide long-term success strategies and procedures.
   agent: development_planner
   expected_output: |
-    A post-launch support guide (2000 words) containing:
+    A post-launch support guide (800 words) containing:
     1. Week 13+: Post-Launch Support & Optimization (ongoing)
     - User support system setup and response procedures
     - Performance monitoring, analytics, and optimization strategies
