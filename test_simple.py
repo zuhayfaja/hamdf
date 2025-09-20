@@ -38,6 +38,31 @@ try:
 except ImportError as e:
     print(f"❌ Pinecone import failed: {e}")
 
+# Test LiteLLM with OpenRouter
+try:
+    import litellm
+    print("✅ LiteLLM import successful")
+
+    # Test OpenRouter connection
+    print("\n🔍 Testing OpenRouter connection...")
+    try:
+        response = litellm.completion(
+            model="openai/x-ai/grok-4-fast:free",
+            messages=[{"role": "user", "content": "Hello, test message"}],
+            max_tokens=50,
+            api_base="https://openrouter.ai/api/v1"
+        )
+        print("✅ OpenRouter connection successful!")
+        print("LiteLLM is properly configured for OpenRouter API.")
+    except Exception as conn_error:
+        print(f"❌ OpenRouter connection test error: {conn_error}")
+        print("But LiteLLM import was successful, so the configuration may still work with CrewAI")
+
+except ImportError as e:
+    print(f"❌ LiteLLM import failed: {e}")
+except Exception as e:
+    print(f"❌ OpenRouter test failed: {e}")
+
 print("\n🎉 Basic dependencies are working! The system framework is ready.")
 print("\nNext steps to resolve ChromaDB issue:")
 print("1. Install Microsoft C++ Build Tools")

@@ -6,9 +6,10 @@ crewai[tools]>=0.186.0
 openai>=1.60.0
 langchain>=0.3.20
 langchain-openai>=0.2.20
+litellm>=1.0.0
 
 # Vector Database (Pinecone alternative to ChromaDB)
-pinecone-client>=6.0.0
+pinecone>=5.4.0
 
 # Data Processing
 pydantic>=2.10.0
