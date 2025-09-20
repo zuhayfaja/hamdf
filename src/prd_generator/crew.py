@@ -80,10 +80,52 @@ class PrdGenerator():
         )
 
     @task
-    def create_development_guide(self) -> Task:
+    def create_planning_setup(self) -> Task:
         return Task(
-            config=self.tasks_config['create_development_guide'],
-            output_file='outputs/development_guide.md'
+            config=self.tasks_config['create_planning_setup'],
+            output_file='outputs/planning_setup_guide.md'
+        )
+
+    @task
+    def create_technical_architecture(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_technical_architecture'],
+            output_file='outputs/technical_architecture_guide.md'
+        )
+
+    @task
+    def create_development_environment(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_development_environment'],
+            output_file='outputs/development_environment_guide.md'
+        )
+
+    @task
+    def create_mvp_development(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_mvp_development'],
+            output_file='outputs/mvp_development_guide.md'
+        )
+
+    @task
+    def create_testing_quality(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_testing_quality'],
+            output_file='outputs/testing_quality_guide.md'
+        )
+
+    @task
+    def create_deployment_launch(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_deployment_launch'],
+            output_file='outputs/deployment_launch_guide.md'
+        )
+
+    @task
+    def create_post_launch_support(self) -> Task:
+        return Task(
+            config=self.tasks_config['create_post_launch_support'],
+            output_file='outputs/post_launch_support_guide.md'
         )
 
     @task

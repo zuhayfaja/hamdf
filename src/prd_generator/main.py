@@ -99,7 +99,7 @@ async def web_interface():
                 <ul>
                     <li><strong>Product Requirements Documents</strong> (8000+ words) - Complete stakeholder analysis, user stories, and technical specifications</li>
                     <li><strong>Technology Stack Recommendations</strong> - Open-source focused with cost analysis and scalability insights</li>
-                    <li><strong>Development Roadmaps</strong> - 30-week implementation plans with sprint breakdowns and timelines</li>
+                    <li><strong>Development Roadmaps</strong> - Phased 30-week implementation guides with sprint breakdowns, testing, deployment, and post-launch support</li>
                     <li><strong>Quality Reviews</strong> - Automated validation and improvement suggestions</li>
                 </ul>
             </div>
@@ -173,7 +173,7 @@ async def web_interface():
                     }
 
                     const result = await response.json();
-                    showStatus('success', `✅ PRD Generation Complete!\\n\\n📊 Documents saved:\\n• Product Requirements Document\\n• Technology Stack Recommendations\\n• Development Guide\\n• Quality Review Report\\n\\nAll files generated successfully!`);
+                    showStatus('success', `✅ PRD Generation Complete!\\n\\n📊 Documents saved:\\n• Product Requirements Document\\n• Technology Stack Recommendations\\n• Planning & Setup Guide\\n• Technical Architecture Guide\\n• Development Environment Guide\\n• MVP Development Guide\\n• Testing & Quality Guide\\n• Deployment & Launch Guide\\n• Post-Launch Support Guide\\n• Quality Review Report\\n\\nAll files generated successfully!`);
 
                     // Load and display generated files
                     await loadFiles();
@@ -305,7 +305,7 @@ async def generate_prd(request: Request):
             "message": "PRD and development guide generated successfully",
             "session_id": session_id,
             "timestamp": timestamp,
-            "result_summary": "Generated: PRD, Technology Stack, Development Guide, Quality Review"
+            "result_summary": "Generated: PRD, Technology Stack, Planning Setup, Technical Architecture, Development Environment, MVP Development, Testing Quality, Deployment Launch, Post-Launch Support, Quality Review"
         }
 
     except Exception as e:

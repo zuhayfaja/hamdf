@@ -92,38 +92,197 @@ recommend_tech_stack:
     - analyze_requirements
     - generate_prd
 
-create_development_guide:
+# Development Guide Tasks - Broken into phases to avoid rate limits
+
+create_planning_setup:
   description: |
-    Create a comprehensive phase-by-phase development guide using the PRD and tech stack recommendations.
+    Create a detailed planning and project setup guide using the PRD and tech stack recommendations.
 
-    The guide must include:
-    - Detailed project timeline with phases
-    - Sprint-by-sprint breakdown for each phase
-    - Specific implementation steps for each feature
-    - Testing strategies and quality assurance processes
-    - Deployment and launch procedures
-    - Post-launch maintenance guidelines
+    Focus on the first phase: Planning & Setup (Weeks 1-2)
+    Include:
+    - Project repository creation and structure
+    - Team communication setup and tools
+    - Development methodology selection (Agile/Scrum)
+    - Sprint planning and Definition of Done
+    - Initial project documentation and processes
+    - Risk assessment for planning phase
 
-    Follow agile/scrum methodologies and provide actionable steps that development teams can directly implement.
+    Provide specific, actionable steps for Weeks 1-2.
   agent: development_planner
   expected_output: |
-    A comprehensive development guide (10000+ words) containing:
+    A planning and setup guide (2500 words) containing:
     1. Development Methodology Overview
-    2. Phase 1: Planning & Architecture (2-4 weeks)
-    3. Phase 2: Core Development Setup (1-2 weeks)
-    4. Phase 3: MVP Feature Development (8-12 weeks)
-    4. Phase 4: Advanced Features & Integrations (4-6 weeks)
-    5. Phase 5: Testing & Quality Assurance (2-4 weeks)
-    6. Phase 6: Deployment & Launch (1-2 weeks)
-    7. Phase 7: Post-Launch Support (ongoing)
-    8. Risk Mitigation Strategies
-    9. Resource Allocation Guidelines
-    10. Quality Gates & Review Checkpoints
-    11. Team Coordination Processes
+    2. Phase 1: Planning & Setup (2 weeks)
+    - Sprint planning meetings
+    - Definition of Done establishment
+    - Repository and project structure setup
+    - Team communication and collaboration tools
+    - Initial risk mitigation strategies
+    - Deliverables checklist
   context:
     - analyze_requirements
     - generate_prd
     - recommend_tech_stack
+
+create_technical_architecture:
+  description: |
+    Create a technical architecture design guide for Week 2 of development.
+
+    Focus on technical planning and architecture design:
+    - System architecture diagrams and decisions
+    - Database schema design and ERD creation
+    - API endpoint planning and data models
+    - Technology stack implementation details
+    - High-level implementation approach
+    - Technical risk assessment
+
+    Provide specific technical specifications ready for Week 2 implementation.
+  agent: development_planner
+  expected_output: |
+    A technical architecture guide (2500 words) containing:
+    1. Week 2: Technical Architecture Design (1-2 weeks)
+    - High-level architecture diagrams and system components
+    - Database schema design and migration scripts creation
+    - API endpoint definitions and data model specifications
+    - Technical requirements and constraints documentation
+    - System integration planning
+    - Technical deliverables checklist
+  context:
+    - create_planning_setup
+
+create_development_environment:
+  description: |
+    Create a development environment setup guide for Week 3 of development.
+
+    Focus on environment preparation and tool setup:
+    - Development and staging environment configuration
+    - CI/CD pipeline setup and automation
+    - Testing framework and quality assurance tools
+    - Development team tool training and onboarding
+    - Performance and security testing preparation
+    - Development workflow documentation
+
+    Provide infrastructure and tooling specifications for Week 3.
+  agent: development_planner
+  expected_output: |
+    A development environment guide (2500 words) containing:
+    1. Week 3: Development Environment Setup (1-2 weeks)
+    - Local, staging, and production environment configurations
+    - CI/CD pipeline definition and implementation steps
+    - Testing framework setup and automation scripts
+    - Development tool selection and configuration
+    - Security and performance testing preparations
+    - Environment setup deliverables checklist
+  context:
+    - create_technical_architecture
+
+create_mvp_development:
+  description: |
+    Create an MVP development implementation guide for Weeks 4-8.
+
+    Focus on core feature development and MVP delivery:
+    - Sprint-by-sprint breakdown for MVP features
+    - Core functionality implementation roadmap
+    - Frontend and backend development schedules
+    - Integration testing and validation
+    - MVP feature prioritization and scope control
+    - Quality checkpoints and code reviews
+
+    Provide detailed implementation plans for the main development phase.
+  agent: development_planner
+  expected_output: |
+    An MVP development guide (3000 words) containing:
+    1. Weeks 4-5: MVP Planning & Core Features (2 weeks)
+    - Feature prioritization and sprint breakdown
+    - Core functionality development roadmap
+    - User interface and user experience implementation plans
+    - API integration and data flow specifications
+
+    2. Weeks 6-8: Advanced Features & Integration (3 weeks)
+    - Advanced feature development and implementation
+    - Third-party service integrations and API connections
+    - Performance optimization and scalability improvements
+    - MVP completion and testing readiness
+  context:
+    - create_development_environment
+
+create_testing_quality:
+  description: |
+    Create a testing and quality assurance guide for Weeks 9-10.
+
+    Focus on comprehensive testing and quality processes:
+    - Unit and integration testing strategies
+    - User acceptance testing procedures
+    - Performance and security testing plans
+    - Bug tracking and resolution workflows
+    - Quality metrics and acceptance criteria
+    - Production readiness assessment
+
+    Provide complete testing methodologies and checklists.
+  agent: development_planner
+  expected_output: |
+    A testing and quality guide (2500 words) containing:
+    1. Weeks 9-10: Testing & Quality Assurance (2 weeks)
+    - Comprehensive testing strategy and framework implementation
+    - Unit testing, integration testing, and end-to-end testing procedures
+    - Performance, security, and user acceptance testing plans
+    - Bug tracking, reporting, and resolution workflows
+    - Quality metrics, acceptance criteria, and go-live checklists
+    - Production readiness assessment and documentation
+  context:
+    - create_mvp_development
+
+create_deployment_launch:
+  description: |
+    Create a deployment and launch preparation guide for Weeks 11-12.
+
+    Focus on production deployment and launch processes:
+    - Production environment setup and configuration
+    - Deployment automation and rollback plans
+    - Monitoring and logging system implementation
+    - User communication and marketing preparation
+    - Beta testing and soft launch strategies
+    - Final production go-live procedures
+
+    Provide production deployment and launch specifications.
+  agent: development_planner
+  expected_output: |
+    A deployment and launch guide (2000 words) containing:
+    1. Weeks 11-12: Deployment & Launch (2 weeks)
+    - Production environment final configuration and security hardening
+    - Automated deployment pipelines and rollback procedures
+    - Monitoring, logging, and alerting system setup
+    - Beta testing coordination and user feedback collection
+    - Marketing, communication, and support team preparation
+    - Go-live checklist, launch procedures, and post-launch monitoring
+  context:
+    - create_testing_quality
+
+create_post_launch_support:
+  description: |
+    Create a post-launch support and maintenance guide for Week 13+.
+
+    Focus on ongoing operation and improvement:
+    - User support system and response procedures
+    - Performance monitoring and optimization
+    - Feature enhancement and roadmap planning
+    - Incident response and maintenance procedures
+    - User feedback collection and analysis
+    - Continuous improvement processes
+
+    Provide long-term success strategies and procedures.
+  agent: development_planner
+  expected_output: |
+    A post-launch support guide (2000 words) containing:
+    1. Week 13+: Post-Launch Support & Optimization (ongoing)
+    - User support system setup and response procedures
+    - Performance monitoring, analytics, and optimization strategies
+    - Feature enhancement planning and product roadmap development
+    - Incident response and emergency maintenance procedures
+    - User feedback collection, analysis, and feature prioritization
+    - Continuous improvement and scaling procedures
+  context:
+    - create_deployment_launch
 
 review_deliverables:
   description: |
@@ -152,4 +311,4 @@ review_deliverables:
     - analyze_requirements
     - generate_prd
     - recommend_tech_stack
-    - create_development_guide
+    - create_post_launch_support
