@@ -82,6 +82,9 @@ async def web_interface():
             .features ul { color: #4b5563; }
             .files { display: none; margin-top: 40px; }
             .files h3 { color: #1f2937; }
+            .download-all-section { text-align: center; margin-bottom: 20px; }
+            .download-all-section button { background: #059669; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; }
+            .download-all-section button:hover { background: #047857; }
             .file-list { background: #f8f9fa; border-radius: 8px; padding: 15px; }
             .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
             .file-item:last-child { border-bottom: none; }
@@ -128,6 +131,9 @@ async def web_interface():
 
             <div id="filesSection" class="files">
                 <h3>📥 Generated Documents</h3>
+                <div class="download-all-section">
+                    <button id="downloadAllBtn" onclick="downloadAllFiles()">📦 Download All Documents</button>
+                </div>
                 <div id="fileList" class="file-list">
                     <!-- Files will be loaded here -->
                 </div>
@@ -272,6 +278,20 @@ async def web_interface():
                     alert('Failed to copy file content. Please try downloading instead.');
                 }
             }
+
+            async function downloadAllFiles() {
+                try {
+                    const link = document.createElement('a');
+                    link.href = `/download-all`;
+                    link.download = 'prd_documents.zip';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (error) {
+                    console.error('Error downloading all files:', error);
+                    alert('Failed to download all files. Please try downloading individual files.');
+                }
+            }
         </script>
     </body>
     </html>
@@ -344,6 +364,36 @@ async def list_generated_files():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to list files: {str(e)}")
+
+
+@app.get("/download-all", summary="Download All Files as ZIP")
+async def download_all_files():
+    """Create and download a ZIP file containing all generated documents."""
+    try:
+        import zipfile
+        import io
+
+        # Create in-memory ZIP file
+        zip_buffer = io.BytesIO()
+
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            if outputs_dir.exists():
+                for file_path in outputs_dir.glob("*.md"):
+                    # Add file to ZIP with relative path
+                    zip_file.write(str(file_path), file_path.name)
+
+        zip_buffer.seek(0)
+
+        # Return ZIP file as response
+        from fastapi.responses import StreamingResponse
+        return StreamingResponse(
+            io.BytesIO(zip_buffer.getvalue()),
+            media_type='application/zip',
+            headers={"Content-Disposition": "attachment; filename=prd_documents.zip"}
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create ZIP file: {str(e)}")
 
 
 @app.get("/download/{filename}", summary="Download File")
