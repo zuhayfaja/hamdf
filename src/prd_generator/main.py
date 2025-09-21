@@ -95,6 +95,20 @@ async def web_interface():
             .copy-btn { background: #dc2626; color: white; }
             .view-btn { background: #6b7280; color: white; }
             .copy-notification { position: fixed; top: 20px; right: 20px; background: #059669; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
+            .pricing-selection { margin-bottom: 30px; }
+            .pricing-selection h3 { color: #1f2937; margin-bottom: 15px; }
+            .pricing-options { display: flex; gap: 30px; margin-bottom: 20px; }
+            .pricing-option { display: flex; align-items: center; cursor: pointer; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px; transition: all 0.3s ease; }
+            .pricing-option:hover { border-color: #3b82f6; }
+            .pricing-option input[type="radio"] { margin-right: 12px; }
+            .pricing-option input[type="radio"]:checked + .option-label strong { color: #3b82f6; }
+            .option-label strong { display: block; margin-bottom: 5px; color: #374151; }
+            .technology-selections { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+            .technology-selections h3 { color: #1f2937; margin-bottom: 20px; }
+            .selection-group { margin-bottom: 20px; }
+            .selection-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; }
+            .selection-group select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; background: white; }
+            .selection-group select:focus { border-color: #3b82f6; outline: none; }
         </style>
     </head>
     <body>
@@ -116,6 +130,66 @@ async def web_interface():
             </div>
 
             <form id="prdForm">
+                <div class="pricing-selection">
+                    <h3>💰 Choose Pricing Tier:</h3>
+                    <div class="pricing-options">
+                        <label class="pricing-option">
+                            <input type="radio" name="pricingTier" value="premium" checked>
+                            <span class="option-label">
+                                <strong>Premium</strong><br>
+                                <small>Flexible recommendations with open-source focus</small>
+                            </span>
+                        </label>
+                        <label class="pricing-option">
+                            <input type="radio" name="pricingTier" value="free">
+                            <span class="option-label">
+                                <strong>Free Tier Only</strong><br>
+                                <small>Scalable from free services only</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="freeTierSelections" class="technology-selections" style="display: none;">
+                    <h3>🔧 Choose Your Free Tier Technologies:</h3>
+
+                    <div class="selection-group">
+                        <label for="databaseSelect"><strong>Database Service:</strong></label>
+                        <select id="databaseSelect" name="database">
+                            <option value="supabase">Supabase Free (500MB, 50k/month requests)</option>
+                            <option value="planetscale">PlanetScale Free (1GB, 100M row reads)</option>
+                            <option value="selfhosted">Self-hosted PostgreSQL/MySQL</option>
+                        </select>
+                    </div>
+
+                    <div class="selection-group">
+                        <label for="hostingSelect"><strong>Hosting Platform:</strong></label>
+                        <select id="hostingSelect" name="hosting">
+                            <option value="railway">Railway Free (512MB RAM, 1GB storage)</option>
+                            <option value="render">Render Free (750 hours/month)</option>
+                            <option value="selfhosted">Self-hosted Docker + Nginx</option>
+                        </select>
+                    </div>
+
+                    <div class="selection-group">
+                        <label for="backendSelect"><strong>Backend Services:</strong></label>
+                        <select id="backendSelect" name="backend">
+                            <option value="nodejs">Node.js Express APIs</option>
+                            <option value="python">Python FastAPI</option>
+                            <option value="flexible">Flexible (Node.js + Python combo)</option>
+                        </select>
+                    </div>
+
+                    <div class="selection-group">
+                        <label for="devtoolsSelect"><strong>Development Tools:</strong></label>
+                        <select id="devtoolsSelect" name="devtools">
+                            <option value="github">GitHub Actions (2000 min/month)</option>
+                            <option value="sentry">Sentry Free (error monitoring)</option>
+                            <option value="combined">Combined workflow (recommended)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <label for="ideaInput">
                     <strong>Describe Your App/Web Idea:</strong><br>
                     <small>Be specific about features, target users, and business goals</small>
@@ -150,6 +224,19 @@ async def web_interface():
             const status = document.getElementById('status');
             const statusContent = document.getElementById('statusContent');
 
+            // Handle pricing tier changes
+            const pricingRadios = document.querySelectorAll('input[name="pricingTier"]');
+            pricingRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const freeTierSelections = document.getElementById('freeTierSelections');
+                    if (this.value === 'free') {
+                        freeTierSelections.style.display = 'block';
+                    } else {
+                        freeTierSelections.style.display = 'none';
+                    }
+                });
+            });
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -169,16 +256,31 @@ async def web_interface():
                 showLoading();
 
                 try {
+                    // Collect form data
+                    const formData = new FormData(form);
+                    const requestData = {
+                        idea_description: ideaDescription,
+                        pricing_tier: formData.get('pricingTier') || 'premium',
+                        timestamp: new Date().toISOString(),
+                        session_id: `web_${Date.now()}`
+                    };
+
+                    // Add selected technologies if free tier is chosen
+                    if (requestData.pricing_tier === 'free') {
+                        requestData.selected_technologies = {
+                            database: formData.get('database'),
+                            hosting: formData.get('hosting'),
+                            backend: formData.get('backend'),
+                            devtools: formData.get('devtools')
+                        };
+                    }
+
                     const response = await fetch('/generate-prd', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            idea_description: ideaDescription,
-                            timestamp: new Date().toISOString(),
-                            session_id: `web_${Date.now()}`
-                        })
+                        body: JSON.stringify(requestData)
                     });
 
                     if (!response.ok) {
@@ -306,17 +408,23 @@ async def generate_prd(request: Request):
     try:
         data = await request.json()
         idea_description = data.get("idea_description", "")
+        pricing_tier = data.get("pricing_tier", "premium")
+        selected_technologies = data.get("selected_technologies", {})
         timestamp = data.get("timestamp", datetime.now().isoformat())
         session_id = data.get("session_id", f"api_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
 
         if not idea_description or len(idea_description.strip()) < 10:
             raise HTTPException(status_code=400, detail="Idea description is required (minimum 10 characters)")
 
-        print(f"🚀 Processing PRD request: {idea_description[:100]}...")
+        print(f"🚀 Processing PRD request (Tier: {pricing_tier}): {idea_description[:100]}...")
+        if selected_technologies:
+            print(f"Selected technologies: {selected_technologies}")
 
         # Prepare inputs
         inputs = {
             'idea_description': idea_description.strip(),
+            'pricing_tier': pricing_tier,
+            'selected_technologies': selected_technologies,
             'timestamp': timestamp,
             'session_id': session_id
         }
@@ -328,12 +436,14 @@ async def generate_prd(request: Request):
         # Generate documents (this may take several minutes)
         result = crew_instance.crew().kickoff(inputs=inputs)
 
+        tier_msg = " (Free Tier)" if pricing_tier == "free" else " (Premium)"
         return {
             "status": "completed",
-            "message": "PRD and development guide generated successfully",
+            "message": f"PRD and development guide generated successfully{tier_msg}",
             "session_id": session_id,
             "timestamp": timestamp,
-            "result_summary": "Generated: PRD, Technology Stack, Planning Setup, Technical Architecture, Development Environment, MVP Development, Testing Quality, Deployment Launch, Post-Launch Support, Quality Review"
+            "pricing_tier": pricing_tier,
+            "result_summary": f"Generated: PRD, Technology Stack, Planning Setup, Technical Architecture, Development Environment, MVP Development, Testing Quality, Deployment Launch, Post-Launch Support, Quality Review{tier_msg}"
         }
 
     except Exception as e:

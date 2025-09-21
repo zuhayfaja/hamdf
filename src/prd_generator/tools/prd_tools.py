@@ -198,6 +198,117 @@ class TechStackAdvisor(BaseTool):
     def _run(self, project_type: str, requirements: Dict[str, Any], scale: str = "medium") -> str:
         """Generate tech stack recommendations."""
 
+        # Check if free tier constraints apply
+        pricing_tier = requirements.get("pricing_tier", "premium")
+        selected_technologies = requirements.get("selected_technologies", {})
+
+        if pricing_tier == "free":
+            return self._generate_free_tier_recommendations(selected_technologies)
+        else:
+            return self._generate_premium_recommendations(project_type, scale)
+
+    def _generate_free_tier_recommendations(self, selected_technologies: Dict[str, str]) -> str:
+        """Generate recommendations using only specified free tier technologies."""
+
+        # Map selected technologies to human-readable names
+        tech_names = {
+            "supabase": "Supabase Free Tier",
+            "planetscale": "PlanetScale Free Tier",
+            "selfhosted": "Self-hosted PostgreSQL/MySQL",
+            "railway": "Railway Free Tier",
+            "render": "Render Free Tier",
+            "nodejs": "Node.js Express APIs",
+            "python": "Python FastAPI",
+            "flexible": "Node.js and Python (combined)",
+            "github": "GitHub Actions",
+            "sentry": "Sentry Free Tier",
+            "combined": "Recommended combined workflow"
+        }
+
+        selected_names = {k: tech_names.get(v, v) for k, v in selected_technologies.items()}
+
+        recommendation_text = f"""
+# Technology Stack Recommendations (Free Tier Only)
+
+## Pricing Tier: Free Tier Only
+All recommendations use only scalable free services with clear upgrade paths.
+
+## Selected Technologies
+
+### Database Service
+- **Selected:** {selected_names.get('database', 'Not selected')}
+- **Free Tier Limits:** Understand the constraints and plan for scaling
+- **Upgrade Path:** Enterprise plans start from $25/month
+
+### Hosting Platform
+- **Selected:** {selected_names.get('hosting', 'Not selected')}
+- **Free Tier Limits:** Resource and bandwidth restrictions apply
+- **Upgrade Path:** Paid plans available for increased capacity
+
+### Backend Services
+- **Selected:** {selected_names.get('backend', 'Not selected')}
+- **Free Tier Limits:** API rate limits, compute restrictions
+- **Upgrade Path:** pay-as-you-go pricing for increased usage
+
+### Development Tools
+- **Selected:** {selected_names.get('devtools', 'Not selected')}
+- **Free Tier Limits:** Usage quotas and feature restrictions
+- **Upgrade Path:** Team and organization plans available
+
+## Frontend Framework Guidance
+- **Next.js (Recommended):** Works with all hosting platforms listed
+- **Tailwind CSS (Styling):** Free, compatible with all platforms
+- **Vercel/Netlify Integration:** Optimal for Next.js deployments
+
+## Free Tier Best Practices
+
+### Database Considerations
+- Design for eventual migration to paid plans
+- Implement efficient queries within free tier limits
+- Plan for data migration when upgrading
+
+### Hosting Considerations
+- Implement performance optimizations for limited resources
+- Design for horizontal scaling when upgrading
+- Use CDNs for static assets to reduce server load
+
+### API Rate Limiting
+- Implement client-side rate limiting
+- Design caching strategies to reduce API calls
+- Plan for upgrade triggers based on usage patterns
+
+### Monitoring & Error Tracking
+- Set up alerting for approaching free tier limits
+- Implement basic monitoring with free tools
+- Establish KPIs for when to upgrade
+
+## Cost Analysis (Free Tier)
+- **Development Phase:** $0/month
+- **Initial Production Phase:** $0-25/month (depending on usage)
+- **Scale Up:** $25-100/month when usage exceeds free limits
+- **Enterprise Scale:** $500-2000/month for full features
+
+## Implementation Timeline (Free Tier)
+1. **Week 1-2:** Free tier setup and basic implementation
+2. **Week 3-4:** Optimization within free tier constraints
+3. **Week 5-8:** Feature development with upgrade planning
+4. **Week 9-10:** Performance optimization and limit monitoring
+5. **Week 11-12:** Launch readiness and upgrade planning
+
+## Warning: Free Tier Limitations
+- **Hard Limits:** Exceeding free tier limits may cause service interruption
+- **Performance:** Limited resources may affect user experience
+- **Support:** Community support only for free tiers
+- **Scaling:** Upgrade path planning is essential for growth
+
+**Recommendation:** Start with free tiers, but have upgrade strategy ready before exceeding limits.
+        """
+
+        return recommendation_text.strip()
+
+    def _generate_premium_recommendations(self, project_type: str, scale: str = "medium") -> str:
+        """Generate premium recommendations (original logic)."""
+
         tech_stacks = {
             "web": {
                 "frontend": {
